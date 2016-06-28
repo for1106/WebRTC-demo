@@ -3,7 +3,7 @@ var server_stream;
 
 function start_broadcast(){
 	navigator.mediaDevices.getUserMedia({
-		audio: true,
+		audio: false,
 		video: true
 	})
 	.then(function(stream){
