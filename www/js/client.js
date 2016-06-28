@@ -17,6 +17,8 @@ function start_watch(){
 	socket.emit('start_watch',{
 		channel: channel_input.val()
 	});
+
+	console.log(33,channel_input.val());
 }
 
 function change_candidate(data){
