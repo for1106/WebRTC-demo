@@ -7,8 +7,7 @@
 	<link rel="stylesheet" href="css/dist/css/bootstrap.min.css">
 	<style>
 		video {
-			max-width: 100%;
-			width: 320px;
+			width: 100%;
 		}
 	</style>
 </head>
@@ -18,7 +17,7 @@
 	<div class="row">
 		<div class="col-sm-12 well">
 			<div class="form-group">
-				<label class="control-label">Channel</label>
+				<label class="control-label">Room</label>
 				<div class="input-group">
 					<input type="text" class="form-control" id="channel_input">
 					<span class="input-group-btn">
@@ -40,7 +39,6 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/webrtc-adapter/out/adapter.js"></script>
-
 
 <script>
  	var video = $('#video'),
