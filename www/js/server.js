@@ -11,7 +11,7 @@ function start_broadcast(){
 		video[0].muted = true;
 		video[0].srcObject = stream;
 
-		init_canvas();
+		// init_canvas();
 	})
 	.catch(log_msg);
 

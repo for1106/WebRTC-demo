@@ -41,7 +41,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- <video id="video" autoplay></video> -->
+		<video id="video" autoplay></video>
 		<!-- <pre id="ascii"></pre> -->
 	</div>
 </div>
@@ -49,13 +49,13 @@
 <script src="js/jquery-3.0.0.min.js"></script>
 <script src="js/server.js"></script>
 <script src="js/client.js"></script>
-<script src="js/ascii.js"></script>
+<!-- <script src="js/ascii.js"></script> -->
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/webrtc-adapter/out/adapter.js"></script>
 
 <script>
- 	var video,
+ 	var video = $('#video>'),
 		channel_input = $('#channel_input'),
 		broadcast_button = $('#broadcast_button'),
 		watch_button = $('#watch_button');
@@ -73,41 +73,41 @@
 		console.log(msg);
 	}
 
-	var init_canvas = (function(use_ascii){
-		var ascii_container,canvas,context,
-			well = $('.well'),
-			width = 160,
-			height = 120,
-			fps = 30;
+	// var init_canvas = (function(use_ascii){
+	// 	var ascii_container,canvas,context,
+	// 		well = $('.well'),
+	// 		width = 160,
+	// 		height = 120,
+	// 		fps = 30;
 
-		if(!use_ascii){
-			video = $('<video autoplay>').insertAfter(well);
-		}else{
-			ascii_container = $('<pre>').insertAfter(well);
-			video = $('<video>').width(width).height(height);
-			canvas = $('<canvas>').width(width).height(height);
-		}
+	// 	if(!use_ascii){
+	// 		video = $('<video autoplay>').insertAfter(well);
+	// 	}else{
+	// 		ascii_container = $('<pre>').insertAfter(well);
+	// 		video = $('<video>').width(width).height(height);
+	// 		canvas = $('<canvas>').width(width).height(height);
+	// 	}
 
-		function init(){
-			video[0].play();
+	// 	function init(){
+	// 		video[0].play();
 
-			context = canvas[0].getContext('2d');
-			context.translate(canvas.width(), 0);
-			context.scale(-1, 1);
+	// 		context = canvas[0].getContext('2d');
+	// 		context.translate(canvas.width(), 0);
+	// 		context.scale(-1, 1);
 
-			setInterval(function(){
-				context.drawImage(video[0], 0, 0, video.width(), video.height());
+	// 		setInterval(function(){
+	// 			context.drawImage(video[0], 0, 0, video.width(), video.height());
 
-				ascii.fromCanvas(canvas,{
-					callback:function(asciiString) {
-						ascii_container.html(asciiString);
-					}
-				});
-			},Math.round(1000/fps));
-		}
+	// 			ascii.fromCanvas(canvas,{
+	// 				callback:function(asciiString) {
+	// 					ascii_container.html(asciiString);
+	// 				}
+	// 			});
+	// 		},Math.round(1000/fps));
+	// 	}
 
-		return !use_ascii ? function(){} : init;
-	})(false);
+	// 	return !use_ascii ? function(){} : init;
+	// })(false);
 </script>
 </body>
 </html>
