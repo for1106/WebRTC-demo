@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>WebRTC</title>
+	<link rel="stylesheet" href="css/dist/css/bootstrap.min.css">
+	<style>
+		video {
+			max-width: 100%;
+			width: 320px;
+		}
+	</style>
+</head>
+<body>
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 well">
+			<div class="form-group">
+				<label class="control-label">Channel</label>
+				<div class="input-group">
+					<input type="text" class="form-control" id="channel_input">
+					<span class="input-group-btn">
+						<button class="btn btn-primary" id="broadcast_button">Broadcast</button>
+					</span>
+					<span class="input-group-btn">
+						<button class="btn btn-primary" id="watch_button">Watch</button>
+					</span>
+				</div>
+			</div>
+		</div>
+		<video id="video" autoplay></video>
+	</div>
+</div>
+
+<script src="js/jquery-3.0.0.min.js"></script>
+<script src="js/server.js"></script>
+<script src="js/client.js"></script>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/webrtc-adapter/out/adapter.js"></script>
+
+
+<script>
+ 	var video = $('#video'),
+		channel_input = $('#channel_input'),
+		broadcast_button = $('#broadcast_button'),
+		watch_button = $('#watch_button');
+
+	var socket = io();
+	socket.on('change_candidate',change_candidate);
+	socket.on('change_data',change_data);
+	socket.on('request_offer',request_offer);
+	socket.on('response_answer',response_answer);
+
+	broadcast_button.on('click',start_broadcast);
+	watch_button.on('click',start_watch);
+
+	function log_msg(msg){
+		console.log(msg);
+	}
+</script>
+</body>
+</html>
