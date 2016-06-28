@@ -7,7 +7,12 @@
 	<link rel="stylesheet" href="css/dist/css/bootstrap.min.css">
 	<style>
 		video {
-			width: 100%;
+			position: fixed;
+			top: 0;
+			left: 0;
+			min-width: 100%;
+			min-height: 100%;
+			z-index: -100;
 		}
 		pre {
 			font-family: 'Courier New', 'Courier', monospace;
@@ -101,8 +106,8 @@
 			},Math.round(1000/fps));
 		}
 
-		return !use_ascii ? false : init;
-	})(true);
+		return !use_ascii ? function(){} : init;
+	})(false);
 </script>
 </body>
 </html>
