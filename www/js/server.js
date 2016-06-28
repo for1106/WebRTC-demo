@@ -11,7 +11,8 @@ function start_broadcast(){
 		log_msg(stream);
 		server_stream = stream;
 		// video[0].muted = true;
-		video[0].srcObject = stream;
+		// video[0].srcObject = stream;
+		video[0].src = URL.createObjectURL(stream);
 	})
 	.catch(log_msg);
 

@@ -10,7 +10,8 @@ function start_watch(){
 	local_pc.onaddstream = function(event){
 		log_msg('收到stream: ');
 		log_msg(event.stream);
-		video[0].srcObject = event.stream;
+		// video[0].srcObject = event.stream;
+		video[0].src = URL.createObjectURL(event.stream);
 	};
 
 	log_msg('送出start_watch');
