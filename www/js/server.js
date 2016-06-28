@@ -22,6 +22,7 @@ function start_broadcast(){
 }
 
 function change_data(data){
+	console.log(data);
 	var pc = new RTCPeerConnection();
 
 	pc.onicecandidate = function(event){
