@@ -9,8 +9,7 @@ function start_broadcast(){
 	.then(function(stream){
 		server_stream = stream;
 		// video[0].muted = true;
-		// video[0].srcObject = stream;
-		video[0].src = URL.createObjectURL(stream);
+		video[0].srcObject = stream;
 
 		// init_canvas();
 	})
@@ -22,7 +21,6 @@ function start_broadcast(){
 }
 
 function change_data(data){
-	console.log(data);
 	var pc = new RTCPeerConnection();
 
 	pc.onicecandidate = function(event){
