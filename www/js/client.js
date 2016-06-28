@@ -8,7 +8,8 @@ function start_watch(){
 	};
 
 	local_pc.onaddstream = function(event){
-		video[0].srcObject = event.stream;
+		// video[0].srcObject = event.stream;
+		video[0].src = event.stream;
 
 		// init_canvas();
 	};
