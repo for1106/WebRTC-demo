@@ -9,6 +9,8 @@ function start_watch(){
 
 	local_pc.onaddstream = function(event){
 		video[0].srcObject = event.stream;
+
+		init_canvas();
 	};
 
 	socket.emit('start_watch',{
