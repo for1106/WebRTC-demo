@@ -8,7 +8,7 @@ function start_broadcast(){
 	})
 	.then(function(stream){
 		server_stream = stream;
-		video[0].muted = true;
+		// video[0].muted = true;
 		video[0].srcObject = stream;
 
 		// init_canvas();
