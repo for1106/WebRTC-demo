@@ -17,21 +17,21 @@ function join_watch(){
 		local_pc.onnegotiationneeded = function(){
 
 		};
+		local_pc.oniceconnectionstatechange = function(event){
+			log('client','ice state',pc.iceconnectionstate);
+		};
 	});
 }
 
 function candidate(data){
 	log('client','收到candidate: ', data.candidate);
-	local_pc.addIceCandidate(data.candidate).then(function(){
-		log('client','candidate success');
-	}).catch(function(){
-		log('client','candidate error');
-	});
+	local_pc.addIceCandidate(data.candidate);
 }
 
 function offer(data){
 	log('client','收到offer: ', data.desc);
-	local_pc.setRemoteDescription(new RTCSessionDescription(data.desc),function(){
+	local_pc.setRemoteDescription(new RTCSessionDescription(data.desc))
+	.then(function(){
 		local_pc.createAnswer()
 		.then(function(desc){
 			return local_pc.setLocalDescription(desc);
