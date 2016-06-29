@@ -24,16 +24,16 @@ function candidate(data){
 	log('client','收到candidate: ', data.candidate);
 	local_pc.addIceCandidate(new RTCIceCandidate({
 		candidate: data.candidate.candidate
-	})).catch(log);
-	log('client','pc: ',local_pc);
+	}),function(){
+		log('client','candidate success');
+	},function(error){
+		log('client','candidate error',error);
+	});
 }
 
 function offer(data){
 	log('client','收到offer: ', data.desc);
-	log('client','session: ', new RTCSessionDescription(data.desc.sdp));
-	local_pc.setRemoteDescription(new RTCSessionDescription(data.desc.sdp),function(){
-		log('client','success');
-
+	local_pc.setRemoteDescription(new RTCSessionDescription(data.desc),function(){
 		local_pc.createAnswer()
 		.then(function(desc){
 			return local_pc.setLocalDescription(desc);
@@ -42,12 +42,6 @@ function offer(data){
 			log('client','觸發answer: ', local_pc.localDescription);
 			data.desc = local_pc.localDescription;
 			socket.emit('answer',data);
-		})
-		.catch(log);
-		log('client','pc: ',local_pc);
-
-	},function(){
-		log('client','error');
-	}).catch(log);
-	log('client','pc: ',local_pc);
+		});
+	});
 }

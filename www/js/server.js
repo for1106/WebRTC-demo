@@ -42,9 +42,7 @@ function notify_broadcast(data){
 			log('server','觸發offer: ', pc.localDescription);
 			data.desc = pc.localDescription;
 			socket.emit('offer',data);
-		})
-		.catch(log);
-		log('server','pc: ',pc);
+		});
 	};
 
 	//建立一個專屬呼叫者的pc
@@ -57,8 +55,7 @@ function notify_broadcast(data){
 function answer(data){
 	log('server','收到answer: ', data.desc);
 	var pc = server_pc[data.watcher];
-	pc.setRemoteDescription(new RTCSessionDescription(data.desc.sdp)).catch(log);
-	log('server','pc: ',pc);
+	pc.setRemoteDescription(new RTCSessionDescription(data.desc));
 }
 
 function leave_watch(data){
