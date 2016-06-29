@@ -49,17 +49,19 @@ function notify_broadcast(data){
 		// log('server','desc state: ',pc.signalingState);
 	};
 
+	log('server','觸發addStream: ', server_stream);
+	pc.addStream(server_stream);
+
 	//建立一個專屬呼叫者的pc
 	server_pc[data.watcher] = pc;
+
+	log('server','server_pc: ',server_pc);
 }
 
 function answer(data){
 	log('server','收到answer');
 	var pc = server_pc[data.watcher];
 	pc.setRemoteDescription(new RTCSessionDescription(data.desc));
-
-	log('server','觸發addStream: ', server_stream);
-	pc.addStream(server_stream);
 }
 
 function leave_watch(data){
