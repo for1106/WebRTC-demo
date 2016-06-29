@@ -35,7 +35,7 @@ function notify_broadcast(data){
 
 	};
 
-	log('server','觸發addStream');
+	log('server','觸發stream');
 	pc.addStream(server_stream);
 
 	log('server','觸發offer');

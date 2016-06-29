@@ -16,7 +16,7 @@ function join_watch(){
 			}
 		};
 		local_pc.onaddstream = function(event){
-			log('client','收到addstream');
+			log('client','收到stream');
 			// video[0].src = window.URL.createObjectURL(event.stream);
 			video[0].srcObject = event.stream;
 			local_stream = event.stream;
