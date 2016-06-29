@@ -15,6 +15,7 @@ function join_broadcast(){
 			video[0].srcObject = stream;
 
 			server_stream = stream;
+			console.log(stream);
 		});
 	});
 }
@@ -26,9 +27,6 @@ function notify_broadcast(data){
 	pc.onicecandidate = function(event){
 		if(event.candidate){
 			log('server','觸發candidate: ', event.candidate);
-			pc.addIceCandidate(event.candidate);
-			log('server','candidate state: ',pc.iceConnectionState);
-
 			data.candidate = event.candidate;
 			socket.emit('candidate',data);
 		}
@@ -48,20 +46,20 @@ function notify_broadcast(data){
 		});
 	};
 	pc.onsignalingstatechange = function(event){
-		log('server','desc state: ',pc.signalingState);
+		// log('server','desc state: ',pc.signalingState);
 	};
 
 	//建立一個專屬呼叫者的pc
 	server_pc[data.watcher] = pc;
-
-	log('server','觸發addStream: ', server_stream);
-	pc.addStream(server_stream);
 }
 
 function answer(data){
-	log('server','收到answer: ', data.desc);
+	log('server','收到answer');
 	var pc = server_pc[data.watcher];
 	pc.setRemoteDescription(new RTCSessionDescription(data.desc));
+
+	log('server','觸發addStream: ', server_stream);
+	pc.addStream(server_stream);
 }
 
 function leave_watch(data){

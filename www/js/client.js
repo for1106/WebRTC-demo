@@ -11,29 +11,30 @@ function join_watch(){
 
 		};
 		local_pc.onaddstream = function(event){
-			log('client','收到addstream: ', event.stream);
+			log('client','收到addstream');
 			video[0].src = window.URL.createObjectURL(event.stream);
 			video[0].srcObject = event.stream;
 
 			local_stream = event.stream;
+			console.log(event);
 		};
 		local_pc.onnegotiationneeded = function(){
 
 		};
 		local_pc.onsignalingstatechange = function(event){
-			log('client','desc state: ',local_pc.signalingState);
+			// log('client','desc state: ',local_pc.signalingState);
 		};
 	});
 }
 
 function candidate(data){
-	log('client','收到candidate: ', data.candidate);
+	log('client','收到candidate');
 	local_pc.addIceCandidate(data.candidate);
 	log('client','candidate state: ',local_pc.iceConnectionState);
 }
 
 function offer(data){
-	log('client','收到offer: ', data.desc);
+	log('client','收到offer');
 	local_pc.setRemoteDescription(new RTCSessionDescription(data.desc))
 	.then(function(){
 		local_pc.createAnswer()
