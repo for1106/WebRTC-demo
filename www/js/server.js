@@ -44,6 +44,9 @@ function notify_broadcast(data){
 			socket.emit('offer',data);
 		});
 	};
+	pc.onsignalingstatechange = function(event){
+		log('server','state: ',pc.signalingState);
+	};
 
 	//建立一個專屬呼叫者的pc
 	server_pc[data.watcher] = pc;

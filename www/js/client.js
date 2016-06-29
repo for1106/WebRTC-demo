@@ -17,8 +17,8 @@ function join_watch(){
 		local_pc.onnegotiationneeded = function(){
 
 		};
-		local_pc.oniceconnectionstatechange = function(event){
-			log('client','ice state',local_pc.iceconnectionstate);
+		local_pc.onsignalingstatechange = function(event){
+			log('client','state: ',local_pc.signalingState);
 		};
 	});
 }
