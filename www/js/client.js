@@ -18,7 +18,7 @@ function join_watch(){
 
 		};
 		local_pc.oniceconnectionstatechange = function(event){
-			log('client','ice state',pc.iceconnectionstate);
+			log('client','ice state',local_pc.iceconnectionstate);
 		};
 	});
 }
