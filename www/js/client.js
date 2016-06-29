@@ -1,38 +1,39 @@
 var local_pc;
 
-function start_watch(){
-	local_pc = new RTCPeerConnection();
-
-	local_pc.onicecandidate = function(event){
-
-	};
-
-	local_pc.onaddstream = function(event){
-		video[0].srcObject = event.stream;
-
-		init_canvas();
-	};
-
-	socket.emit('start_watch',{
+function join_watch(){
+	socket.emit('join_watch',{
 		channel: channel_input.val()
+	},function(){
+		local_pc = new RTCPeerConnection(null);
+
+		local_pc.onicecandidate = function(event){
+
+		};
+		local_pc.onaddstream = function(event){
+			video[0].src = window.URL.createObjectURL(event.stream);
+			video[0].srcObject = event.stream;
+		};
+		local_pc.onnegotiationneeded = function(){
+
+		};
 	});
 }
 
-function change_candidate(data){
-	local_pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+function candidate(data){
+	local_pc.addIceCandidate(new RTCIceCandidate({
+		candidate: data.candidate.candidate
+	}));
 }
 
-function request_offer(data){
-	local_pc.setRemoteDescription(data.desc);
+function offer(data){
+	local_pc.setRemoteDescription(new RTCSessionDescription(data.desc));
 
 	local_pc.createAnswer()
 	.then(function(desc){
-		local_pc.setLocalDescription(desc);
+		return local_pc.setLocalDescription(desc);
 	})
 	.then(function(){
-		socket.emit('answer',{
-			desc: local_pc.localDescription
-		});
-	})
-	.catch(log_msg);
+		data.desc = local_pc.localDescription;
+		socket.emit('answer',data);
+	});
 }

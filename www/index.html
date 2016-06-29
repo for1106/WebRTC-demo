@@ -4,24 +4,9 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>WebRTC</title>
-	<link rel="stylesheet" href="css/dist/css/bootstrap.min.css">
-	<style>
-		video {
-			position: fixed;
-			top: 0;
-			left: 0;
-			min-width: 100%;
-			min-height: 100%;
-			z-index: -100;
-		}
-		pre {
-			font-family: 'Courier New', 'Courier', monospace;
-			font-size: 10px;
-			line-height: 10px;
-			letter-spacing: -1.5px;
-			text-align: center;
-		}
-	</style>
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -29,7 +14,7 @@
 	<div class="row">
 		<div class="col-sm-12 well">
 			<div class="form-group">
-				<label class="control-label">Room</label>
+				<label class="control-label">Channel</label>
 				<div class="input-group">
 					<input type="text" class="form-control" id="channel_input">
 					<span class="input-group-btn">
@@ -38,76 +23,113 @@
 					<span class="input-group-btn">
 						<button class="btn btn-primary" id="watch_button">Watch</button>
 					</span>
+					<span class="input-group-btn">
+						<button class="btn btn-primary" id="list_button">List</button>
+					</span>
 				</div>
 			</div>
 		</div>
-		<!-- <video id="video" autoplay></video> -->
-		<!-- <pre id="ascii"></pre> -->
+	</div>
+</div>
+
+<video id="video" autoplay></video>
+
+<div class="modal fade" id="dialog" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">
+
+				</h4>
+			</div>
+			<div class="modal-body">
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
 	</div>
 </div>
 
 <script src="js/jquery-3.0.0.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
 <script src="js/server.js"></script>
 <script src="js/client.js"></script>
-<script src="js/ascii.js"></script>
+<script src="js/adapter-1.4.0.js"></script>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="/webrtc-adapter/out/adapter.js"></script>
 
 <script>
- 	var video,
+	var video = $('#video'),
 		channel_input = $('#channel_input'),
 		broadcast_button = $('#broadcast_button'),
-		watch_button = $('#watch_button');
+		watch_button = $('#watch_button'),
+		list_button = $('#list_button'),
+		dialog = $('#dialog');
+
+	broadcast_button.on('click', join_broadcast);
+	watch_button.on('click', join_watch);
+	list_button.on('click', list_call);
 
 	var socket = io();
-	socket.on('change_candidate',change_candidate);
-	socket.on('change_data',change_data);
-	socket.on('request_offer',request_offer);
-	socket.on('response_answer',response_answer);
+	socket.on('message',message);
+	socket.on('list',list_back);
 
-	broadcast_button.on('click',start_broadcast);
-	watch_button.on('click',start_watch);
+	socket.on('notify_broadcast',notify_broadcast);
+	socket.on('leave_watch',leave_watch);
+	socket.on('candidate',candidate);
+	socket.on('offer',offer);
+	socket.on('answer',answer);
 
-	function log_msg(msg){
-		console.log(msg);
+	/////////////////////////////////////////////////////////
+
+	function list_call(){
+		socket.emit('list',{
+			channel: channel_input.val()
+		});
 	}
 
-	var init_canvas = (function(use_ascii){
-		var ascii_container,canvas,context,
-			well = $('.well'),
-			width = 160,
-			height = 120,
-			fps = 30;
+	function list_back(data){
+		if(data.flag){
+			dialog_show('Broadcast列表',data.list);
 
-		if(!use_ascii){
-			video = $('<video autoplay>').insertAfter(well);
+			dialog.find('.modal-body p').on('click',function(){
+				channel_input.val($(this).text());
+				dialog.modal('hide');
+			});
 		}else{
-			ascii_container = $('<pre>').insertAfter(well);
-			video = $('<video>').width(width).height(height);
-			canvas = $('<canvas>').width(width).height(height);
+			dialog_show('Watch列表',data.list);
 		}
+	}
 
-		function init(){
-			video[0].play();
-
-			context = canvas[0].getContext('2d');
-			context.translate(canvas.width(), 0);
-			context.scale(-1, 1);
-
-			setInterval(function(){
-				context.drawImage(video[0], 0, 0, video.width(), video.height());
-
-				ascii.fromCanvas(canvas,{
-					callback:function(asciiString) {
-						ascii_container.html(asciiString);
-					}
-				});
-			},Math.round(1000/fps));
+	function message(data){
+		if(data.type && data.type == 'alert'){
+			dialog_show('警示',data.msg);
+		}else{
+			console.log(data.msg);
 		}
+	}
 
-		return use_ascii ? init : function(){};
-	})(true);
+	function dialog_show(title,body){
+		dialog
+		.find('.modal-title').html(title).end()
+		.find('.modal-body').html(function(){
+			if(!$.isArray(body)){
+				body = [body];
+			}
+
+			var result = [];
+			$.each(body,function(){
+				result.push('<p>'+this+'</p>');
+			});
+			return result.join('');
+		}).end()
+		.modal('show');
+	}
 </script>
 </body>
 </html>

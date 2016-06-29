@@ -1,55 +1,58 @@
 var server_pc = {};
 var server_stream;
 
-function start_broadcast(){
-	navigator.mediaDevices.getUserMedia({
-		audio: false,
-		video: true
-	})
-	.then(function(stream){
-		server_stream = stream;
-		video[0].muted = true;
-		video[0].srcObject = stream;
-
-		init_canvas();
-	})
-	.catch(log_msg);
-
-	socket.emit('start_broadcast',{
+function join_broadcast(){
+	socket.emit('join_broadcast',{
 		channel: channel_input.val()
+	},function(){
+		navigator.mediaDevices.getUserMedia({
+			audio: false,
+			video: true
+		})
+		.then(function(stream){
+			video[0].muted = true;
+			video[0].src = window.URL.createObjectURL(stream);
+			video[0].srcObject = stream;
+
+			server_stream = stream;
+		});
 	});
 }
 
-function change_data(data){
-	var pc = new RTCPeerConnection();
+function notify_broadcast(data){
+	var pc = new RTCPeerConnection(null);
 
 	pc.onicecandidate = function(event){
 		if(event.candidate){
-			socket.emit('change_candidate',{
-				socket_id: data.socket_id,
-				candidate: event.candidate
-			});
+			data.candidate = event.candidate;
+			socket.emit('candidate',data);
 		}
 	};
+	pc.onaddstream = function(event){
 
-	pc.addStream(server_stream);
-
-	pc.createOffer()
-	.then(function(desc){
-		pc.setLocalDescription(desc);
-	})
-	.then(function(){
-		socket.emit('offer',{
-			socket_id: data.socket_id,
-			desc: pc.localDescription
+	};
+	pc.onnegotiationneeded = function(){
+		pc.createOffer()
+		.then(function(desc){
+			return pc.setLocalDescription(desc);
+		})
+		.then(function(){
+			data.desc = pc.localDescription;
+			socket.emit('offer',data);
 		});
-	})
-	.catch(log_msg);
+	};
 
 	//建立一個專屬呼叫者的pc
-	server_pc[data.socket_id] = pc;
+	server_pc[data.watcher] = pc;
+
+	pc.addStream(server_stream);
 }
 
-function response_answer(data){
-	server_pc[data.socket_id].setRemoteDescription(data.desc);
+function answer(data){
+	var pc = server_pc[data.watcher];
+	pc.setRemoteDescription(new RTCSessionDescription(data.desc));
+}
+
+function leave_watch(data){
+	delete server_pc[data.watcher];
 }
