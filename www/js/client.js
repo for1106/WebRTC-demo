@@ -30,6 +30,7 @@ function candidate(data){
 
 function offer(data){
 	log('client','收到offer: ', data.desc);
+	log('client','session: ', new RTCSessionDescription(data.desc.sdp));
 	local_pc.setRemoteDescription(new RTCSessionDescription(data.desc.sdp),function(){
 		log('client','success');
 
