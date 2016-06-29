@@ -22,6 +22,14 @@ var channel_info = {
 };
 
 io.on('connection',function(socket){
+	socket.on('log',function(){
+		var result = [];
+		for(var i=0;i<arguments.length;i++){
+			result.push(arguments[i]);
+		}
+		io.emit('message',result);
+	});
+
 	function leave_broadcast(){
 		for(var x in channel_info){
 			var channel = channel_info[x];

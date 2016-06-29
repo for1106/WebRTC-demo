@@ -20,10 +20,12 @@ function join_broadcast(){
 }
 
 function notify_broadcast(data){
+	log('server','新人加入: ', data.watcher);
 	var pc = new RTCPeerConnection(null);
 
 	pc.onicecandidate = function(event){
 		if(event.candidate){
+			log('server','觸發candidate: ', event.candidate);
 			data.candidate = event.candidate;
 			socket.emit('candidate',data);
 		}
@@ -37,6 +39,7 @@ function notify_broadcast(data){
 			return pc.setLocalDescription(desc);
 		})
 		.then(function(){
+			log('server','觸發offer: ', pc.localDescription);
 			data.desc = pc.localDescription;
 			socket.emit('offer',data);
 		});
@@ -45,14 +48,17 @@ function notify_broadcast(data){
 	//建立一個專屬呼叫者的pc
 	server_pc[data.watcher] = pc;
 
+	log('server','觸發addStream: ', server_stream);
 	pc.addStream(server_stream);
 }
 
 function answer(data){
+	log('server','收到answer: ', data.desc);
 	var pc = server_pc[data.watcher];
 	pc.setRemoteDescription(new RTCSessionDescription(data.desc));
 }
 
 function leave_watch(data){
+	log('server','有人離開: ', data.watcher);
 	delete server_pc[data.watcher];
 }

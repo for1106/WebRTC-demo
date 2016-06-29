@@ -106,11 +106,19 @@
 		}
 	}
 
+	function log(){
+		var result = ['log'];
+		for(var i=0;i<arguments.length;i++){
+			result.push(arguments[i]);
+		}
+		socket.emit.apply(socket,result);
+	}
+
 	function message(data){
 		if(data.type && data.type == 'alert'){
 			dialog_show('警示',data.msg);
 		}else{
-			console.log(data.msg);
+			console.log.apply(console,data);
 		}
 	}
 
