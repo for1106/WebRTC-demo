@@ -26,6 +26,9 @@ function notify_broadcast(data){
 	pc.onicecandidate = function(event){
 		if(event.candidate){
 			log('server','觸發candidate: ', event.candidate);
+			pc.addIceCandidate(event.candidate);
+			log('server','candidate state: ',pc.iceConnectionState);
+
 			data.candidate = event.candidate;
 			socket.emit('candidate',data);
 		}

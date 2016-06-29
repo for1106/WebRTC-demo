@@ -15,7 +15,7 @@ function join_watch(){
 			video[0].src = window.URL.createObjectURL(event.stream);
 			video[0].srcObject = event.stream;
 
-			local_stream = stream;
+			local_stream = event.stream;
 		};
 		local_pc.onnegotiationneeded = function(){
 
