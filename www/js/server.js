@@ -24,7 +24,7 @@ function notify_broadcast(data){
 
 	pc.onicecandidate = function(event){
 		if(event.candidate){
-			log('server','觸發candidate: ', event.candidate);
+			log('server','觸發candidate: ', event.candidate.candidate);
 			socket.emit('candidate_server',{
 				watcher: data.watcher,
 				candidate: event.candidate
@@ -59,11 +59,11 @@ function notify_watch(data){
 }
 
 function answer(data){
-	log('server','收到answer: ',data.desc);
+	log('server','收到answer: ',data.desc.sdp);
 	server_pc[data.watcher].setRemoteDescription(data.desc);
 }
 
 function candidate_client(data){
-	log('server','收到candidate: ',data.candidate);
+	log('server','收到candidate: ',data.candidate.candidate);
 	server_pc[data.watcher].addIceCandidate(data.candidate);
 }

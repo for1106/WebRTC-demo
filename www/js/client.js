@@ -9,7 +9,7 @@ function join_watch(){
 
 		local_pc.onicecandidate = function(event){
 			if(event.candidate){
-				log('client','觸發candidate: ', event.candidate);
+				log('client','觸發candidate: ', event.candidate.candidate);
 				socket.emit('candidate_client',{
 					candidate: event.candidate
 				});
@@ -25,7 +25,7 @@ function join_watch(){
 }
 
 function offer(data){
-	log('client','收到offer: ',data.desc);
+	log('client','收到offer: ',data.desc.sdp);
 	local_pc.setRemoteDescription(data.desc)
 	.then(function(){
 		log('client','觸發answer');
@@ -41,6 +41,6 @@ function offer(data){
 }
 
 function candidate_server(data){
-	log('client','收到candidate: ',data.candidate);
+	log('client','收到candidate: ',data.candidate.candidate);
 	local_pc.addIceCandidate(data.candidate);
 }
