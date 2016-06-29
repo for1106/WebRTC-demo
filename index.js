@@ -52,7 +52,7 @@ io.on('connection',function(socket){
 
 			var index = channel.watcher.indexOf(socket.id);
 			if(index > -1){
-				socket.to(channel.broadcaster).emit('leave_watch',{
+				socket.to(channel.broadcaster).emit('notify_watch',{
 					watcher: socket.id
 				});
 
@@ -149,8 +149,12 @@ io.on('connection',function(socket){
 		}
 	});
 
-	socket.on('candidate',function(data){
-		socket.to(data.watcher).emit('candidate',data);
+	socket.on('candidate1',function(data){
+		socket.to(data.watcher).emit('candidate1',data);
+	});
+
+	socket.on('candidate2',function(data){
+		socket.to(data.broadcaster).emit('candidate2',data);
 	});
 
 	socket.on('offer',function(data){

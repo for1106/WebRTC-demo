@@ -8,43 +8,39 @@ function join_watch(){
 		local_pc = new RTCPeerConnection(pc_config);
 
 		local_pc.onicecandidate = function(event){
-
+			if(event.candidate){
+				log('client','觸發candidate: ', event.candidate);
+				data.candidate = event.candidate;
+				socket.emit('candidate2',data);
+			}
 		};
 		local_pc.onaddstream = function(event){
 			log('client','收到addstream');
-			video[0].src = window.URL.createObjectURL(event.stream);
+			// video[0].src = window.URL.createObjectURL(event.stream);
 			video[0].srcObject = event.stream;
 
 			local_stream = event.stream;
-			console.info(event.stream);
-		};
-		local_pc.onnegotiationneeded = function(){
-
-		};
-		local_pc.onsignalingstatechange = function(event){
-			// log('client','desc state: ',local_pc.signalingState);
 		};
 	});
-}
-
-function candidate(data){
-	log('client','收到candidate: ',data.candidate);
-	local_pc.addIceCandidate(data.candidate);
-	// log('client','candidate state: ',local_pc.iceConnectionState);
 }
 
 function offer(data){
 	log('client','收到offer: ',data.desc);
-	local_pc.setRemoteDescription(new RTCSessionDescription(data.desc))
+	local_pc.setRemoteDescription(data.desc)
 	.then(function(){
+		log('client','觸發answer');
 		local_pc.createAnswer()
 		.then(function(desc){
-			local_pc.setLocalDescription(new RTCSessionDescription(desc));
+			local_pc.setLocalDescription(desc);
 		})
 		.then(function(){
-			log('client','觸發answer: ', local_pc.localDescription);
 			data.desc = local_pc.localDescription;
 			socket.emit('answer',data);
 		});
 	});
+}
+
+function candidate1(data){
+	log('client','收到candidate: ',data.candidate);
+	local_pc.addIceCandidate(data.candidate);
 }
