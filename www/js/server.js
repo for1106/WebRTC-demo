@@ -36,9 +36,6 @@ function notify_broadcast(data){
 
 	};
 
-	log('server','觸發stream');
-	pc.addStream(server_stream);
-
 	log('server','觸發offer');
 	pc.createOffer()
 	.then(function(desc){
@@ -62,6 +59,9 @@ function notify_watch(data){
 function answer(data){
 	log('server','收到answer:\n'+data.desc.sdp);
 	server_pc[data.watcher].setRemoteDescription(data.desc);
+
+	log('server','觸發stream');
+	server_pc[data.watcher].addStream(server_stream);
 }
 
 function candidate_client(data){
