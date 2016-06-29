@@ -98,6 +98,8 @@ io.on('connection',function(socket){
 		if(channel){
 			fn();
 
+			socket.channel_broadcaster = channel.broadcaster;
+
 			channel.watcher.push(socket.id);
 
 			socket.join(channel.room);
@@ -154,7 +156,11 @@ io.on('connection',function(socket){
 	});
 
 	socket.on('candidate2',function(data){
-		socket.to(data.broadcaster).emit('candidate2',data);
+		socket.to(socket.channel_broadcaster).emit('candidate2',{
+			broadcaster: socket.channel_broadcaster,
+			watcher: socket.id,
+			candidate: data.candidate
+		});
 	});
 
 	socket.on('offer',function(data){

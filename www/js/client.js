@@ -10,8 +10,10 @@ function join_watch(){
 		local_pc.onicecandidate = function(event){
 			if(event.candidate){
 				log('client','觸發candidate: ', event.candidate);
-				data.candidate = event.candidate;
-				socket.emit('candidate2',data);
+				// data.candidate = event.candidate;
+				socket.emit('candidate2',{
+					candidate: event.candidate
+				});
 			}
 		};
 		local_pc.onaddstream = function(event){
