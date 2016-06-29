@@ -17,8 +17,9 @@ function join_watch(){
 		};
 		local_pc.onaddstream = function(event){
 			log('client','收到stream');
-			// video[0].src = window.URL.createObjectURL(event.stream);
-			video[0].srcObject = event.stream;
+			// video.src = window.URL.createObjectURL(event.stream);
+			video.srcObject = event.stream;
+			video.play();
 			local_stream = event.stream;
 		};
 	});
@@ -26,17 +27,16 @@ function join_watch(){
 
 function offer(data){
 	log('client','收到offer:\n'+data.desc.sdp);
-	local_pc.setRemoteDescription(data.desc)
+	local_pc.setRemoteDescription(data.desc);
+
+	log('client','觸發answer');
+	local_pc.createAnswer()
+	.then(function(desc){
+		local_pc.setLocalDescription(desc);
+	})
 	.then(function(){
-		log('client','觸發answer');
-		local_pc.createAnswer()
-		.then(function(desc){
-			local_pc.setLocalDescription(desc);
-		})
-		.then(function(){
-			data.desc = local_pc.localDescription;
-			socket.emit('answer',data);
-		});
+		data.desc = local_pc.localDescription;
+		socket.emit('answer',data);
 	});
 }
 

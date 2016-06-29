@@ -10,9 +10,10 @@ function join_broadcast(){
 			video: true
 		})
 		.then(function(stream){
-			// video[0].muted = true;
-			// video[0].src = window.URL.createObjectURL(stream);
-			video[0].srcObject = stream;
+			// video.muted = true;
+			// video.src = window.URL.createObjectURL(stream);
+			video.srcObject = stream;
+			video.play();
 			server_stream = stream;
 		});
 	});
