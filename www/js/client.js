@@ -22,12 +22,10 @@ function join_watch(){
 
 function candidate(data){
 	log('client','收到candidate: ', data.candidate);
-	local_pc.addIceCandidate(new RTCIceCandidate({
-		candidate: data.candidate.candidate
-	}),function(){
+	local_pc.addIceCandidate(data.candidate).then(function(){
 		log('client','candidate success');
-	},function(error){
-		log('client','candidate error',error);
+	}).catch(function(){
+		log('client','candidate error');
 	});
 }
 
