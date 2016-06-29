@@ -32,20 +32,21 @@ function offer(data){
 	log('client','收到offer: ', data.desc);
 	local_pc.setRemoteDescription(new RTCSessionDescription(data.desc.sdp),function(){
 		log('client','success');
+
+		local_pc.createAnswer()
+		.then(function(desc){
+			return local_pc.setLocalDescription(desc);
+		})
+		.then(function(){
+			log('client','觸發answer: ', local_pc.localDescription);
+			data.desc = local_pc.localDescription;
+			socket.emit('answer',data);
+		})
+		.catch(log);
+		log('client','pc: ',local_pc);
+
 	},function(){
 		log('client','error');
 	}).catch(log);
-	log('client','pc: ',local_pc);
-
-	local_pc.createAnswer()
-	.then(function(desc){
-		return local_pc.setLocalDescription(desc);
-	})
-	.then(function(){
-		log('client','觸發answer: ', local_pc.localDescription);
-		data.desc = local_pc.localDescription;
-		socket.emit('answer',data);
-	})
-	.catch(log);
 	log('client','pc: ',local_pc);
 }
