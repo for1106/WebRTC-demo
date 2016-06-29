@@ -24,11 +24,11 @@ function notify_broadcast(data){
 
 	pc.onicecandidate = function(event){
 		if(event.candidate){
-			// log('server','觸發candidate: ', event.candidate.candidate);
-			// socket.emit('candidate_server',{
-			// 	watcher: data.watcher,
-			// 	candidate: event.candidate
-			// });
+			log('server','觸發candidate: ', event.candidate.candidate);
+			socket.emit('candidate_server',{
+				watcher: data.watcher,
+				candidate: event.candidate
+			});
 		}
 	};
 	pc.onaddstream = function(event){

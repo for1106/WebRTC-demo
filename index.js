@@ -22,14 +22,6 @@ var channel_info = {
 };
 
 io.on('connection',function(socket){
-	socket.on('log',function(){
-		var result = [];
-		for(var i=0;i<arguments.length;i++){
-			result.push(arguments[i]);
-		}
-		io.emit('message',result);
-	});
-
 	function leave_broadcast(){
 		for(var x in channel_info){
 			var channel = channel_info[x];
@@ -127,6 +119,7 @@ io.on('connection',function(socket){
 			if(keys.length > 0){
 				socket.emit('list',{
 					list: keys,
+					label: 'Broadcast列表',
 					flag: true
 				});
 			}else{
@@ -142,6 +135,7 @@ io.on('connection',function(socket){
 			if(channel){
 				socket.emit('list',{
 					list: channel.watcher,
+					label: 'Watch列表',
 					flag: false
 				});
 			}else{
@@ -186,5 +180,9 @@ io.on('connection',function(socket){
 	socket.on('disconnect',function(){
 		leave_broadcast();
 		leave_watch();
+	});
+
+	socket.on('log',function(){
+		io.emit('message',arguments);
 	});
 });

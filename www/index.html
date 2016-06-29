@@ -96,16 +96,14 @@
 	}
 
 	function list_back(data){
-		if(data.flag){
-			dialog_show('Broadcast列表',data.list);
+		dialog_show(data.label,data.list);
 
-			dialog.find('.modal-body p').on('click',function(){
+		dialog.find('.modal-body p').on('click',function(){
+			if(data.flag){
 				channel_input.val($(this).text());
-				dialog.modal('hide');
-			});
-		}else{
-			dialog_show('Watch列表',data.list);
-		}
+			}
+			dialog.modal('hide');
+		});
 	}
 
 	function log(){
