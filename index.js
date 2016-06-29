@@ -63,20 +63,20 @@ io.on('connection',function(socket){
 	}
 
 	socket.on('join_broadcast',function(data,fn){
-		leave_broadcast();
-		leave_watch();
-
 		if(!data.channel){
 			socket.emit('message',{
 				type: 'alert',
 				msg: '需要一個channel名稱'
 			});
-		}else if(channel_info[data.channel]){
-			socket.emit('message',{
-				type: 'alert',
-				msg: '此channel已存在'
-			});
-		}else{
+			return;
+		}
+
+		leave_broadcast();
+		leave_watch();
+
+		var channel = channel_info[data.channel];
+
+		if(!channel){
 			fn();
 
 			channel_info[data.channel] = {
@@ -84,8 +84,11 @@ io.on('connection',function(socket){
 				broadcaster: socket.id,
 				watcher: []
 			};
-
-			console.log(channel_info);
+		}else{
+			socket.emit('message',{
+				type: 'alert',
+				msg: '此channel已存在'
+			});
 		}
 	});
 
@@ -98,6 +101,7 @@ io.on('connection',function(socket){
 		if(channel){
 			fn();
 
+			//為了candidate or 改為從channel_info找
 			socket.channel_broadcaster = channel.broadcaster;
 
 			channel.watcher.push(socket.id);
@@ -107,8 +111,6 @@ io.on('connection',function(socket){
 				broadcaster: channel.broadcaster,
 				watcher: socket.id
 			});
-
-			console.log(channel_info);
 		}else{
 			socket.emit('message',{
 				type: 'alert',
@@ -151,14 +153,24 @@ io.on('connection',function(socket){
 		}
 	});
 
-	socket.on('candidate1',function(data){
-		socket.to(data.watcher).emit('candidate1',data);
+	socket.on('candidate_server',function(data){
+		var broadcaster = socket.id;
+		var watcher = data.watcher;
+
+		socket.to(watcher).emit('candidate_server',{
+			broadcaster: broadcaster,
+			watcher: watcher,
+			candidate: data.candidate
+		});
 	});
 
-	socket.on('candidate2',function(data){
-		socket.to(socket.channel_broadcaster).emit('candidate2',{
-			broadcaster: socket.channel_broadcaster,
-			watcher: socket.id,
+	socket.on('candidate_client',function(data){
+		var broadcaster = socket.channel_broadcaster;
+		var watcher = socket.id;
+
+		socket.to(socket.channel_broadcaster).emit('candidate_client',{
+			broadcaster: broadcaster,
+			watcher: watcher,
 			candidate: data.candidate
 		});
 	});
@@ -174,7 +186,5 @@ io.on('connection',function(socket){
 	socket.on('disconnect',function(){
 		leave_broadcast();
 		leave_watch();
-
-		console.log(channel_info);
 	});
 });

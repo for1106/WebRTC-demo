@@ -13,7 +13,6 @@ function join_broadcast(){
 			// video[0].muted = true;
 			// video[0].src = window.URL.createObjectURL(stream);
 			video[0].srcObject = stream;
-
 			server_stream = stream;
 		});
 	});
@@ -26,8 +25,10 @@ function notify_broadcast(data){
 	pc.onicecandidate = function(event){
 		if(event.candidate){
 			log('server','觸發candidate: ', event.candidate);
-			data.candidate = event.candidate;
-			socket.emit('candidate1',data);
+			socket.emit('candidate_server',{
+				watcher: data.watcher,
+				candidate: event.candidate
+			});
 		}
 	};
 	pc.onaddstream = function(event){
@@ -49,9 +50,6 @@ function notify_broadcast(data){
 
 	//建立一個專屬呼叫者的pc
 	server_pc[data.watcher] = pc;
-
-	console.info(server_pc);
-	console.info(pc);
 }
 
 function notify_watch(data){
@@ -62,12 +60,10 @@ function notify_watch(data){
 
 function answer(data){
 	log('server','收到answer: ',data.desc);
-	var pc = server_pc[data.watcher];
-	pc.setRemoteDescription(data.desc);
+	server_pc[data.watcher].setRemoteDescription(data.desc);
 }
 
-function candidate2(data){
+function candidate_client(data){
 	log('server','收到candidate: ',data.candidate);
-	var pc = server_pc[data.watcher];
-	pc.addIceCandidate(data.candidate);
+	server_pc[data.watcher].addIceCandidate(data.candidate);
 }

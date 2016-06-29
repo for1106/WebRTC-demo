@@ -10,8 +10,7 @@ function join_watch(){
 		local_pc.onicecandidate = function(event){
 			if(event.candidate){
 				log('client','觸發candidate: ', event.candidate);
-				// data.candidate = event.candidate;
-				socket.emit('candidate2',{
+				socket.emit('candidate_client',{
 					candidate: event.candidate
 				});
 			}
@@ -20,7 +19,6 @@ function join_watch(){
 			log('client','收到addstream');
 			// video[0].src = window.URL.createObjectURL(event.stream);
 			video[0].srcObject = event.stream;
-
 			local_stream = event.stream;
 		};
 	});
@@ -42,7 +40,7 @@ function offer(data){
 	});
 }
 
-function candidate1(data){
+function candidate_server(data){
 	log('client','收到candidate: ',data.candidate);
 	local_pc.addIceCandidate(data.candidate);
 }

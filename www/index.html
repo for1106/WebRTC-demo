@@ -64,7 +64,7 @@
 <script src="/socket.io/socket.io.js"></script>
 
 <script>
-	var pc_config = null;//{ 'iceServers': [{ 'url': 'stun:stun.l.google.com:19302' }] };
+	var pc_config = { 'iceServers': [{ 'url': 'stun:stun.l.google.com:19302' }] };
 	var video = $('#video'),
 		channel_input = $('#channel_input'),
 		broadcast_button = $('#broadcast_button'),
@@ -82,8 +82,8 @@
 
 	socket.on('notify_broadcast',notify_broadcast);
 	socket.on('notify_watch',notify_watch);
-	socket.on('candidate1',candidate1);
-	socket.on('candidate2',candidate2);
+	socket.on('candidate_server',candidate_server);
+	socket.on('candidate_client',candidate_client);
 	socket.on('offer',offer);
 	socket.on('answer',answer);
 
