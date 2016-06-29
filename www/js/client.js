@@ -21,7 +21,7 @@ function join_watch(){
 
 		};
 		local_pc.onsignalingstatechange = function(event){
-			log('client','state: ',local_pc.signalingState);
+			log('client','desc state: ',local_pc.signalingState);
 		};
 	});
 }
@@ -29,6 +29,7 @@ function join_watch(){
 function candidate(data){
 	log('client','收到candidate: ', data.candidate);
 	local_pc.addIceCandidate(data.candidate);
+	log('client','candidate state: ',local_pc.iceConnectionState);
 }
 
 function offer(data){
