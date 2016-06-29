@@ -25,7 +25,7 @@ function join_watch(){
 }
 
 function offer(data){
-	log('client','收到offer:\n',data.desc.sdp);
+	log('client','收到offer:\n'+data.desc.sdp);
 	local_pc.setRemoteDescription(data.desc)
 	.then(function(){
 		log('client','觸發answer');
