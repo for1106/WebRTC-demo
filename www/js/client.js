@@ -25,11 +25,13 @@ function candidate(data){
 	local_pc.addIceCandidate(new RTCIceCandidate({
 		candidate: data.candidate.candidate
 	})).catch(log);
+	log('client','pc: ',local_pc);
 }
 
 function offer(data){
 	log('client','收到offer: ', data.desc);
 	local_pc.setRemoteDescription(new RTCSessionDescription(data.desc)).catch(log);
+	log('client','pc: ',local_pc);
 
 	local_pc.createAnswer()
 	.then(function(desc){
@@ -41,4 +43,5 @@ function offer(data){
 		socket.emit('answer',data);
 	})
 	.catch(log);
+	log('client','pc: ',local_pc);
 }

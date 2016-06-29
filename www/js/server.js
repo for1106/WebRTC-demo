@@ -44,6 +44,7 @@ function notify_broadcast(data){
 			socket.emit('offer',data);
 		})
 		.catch(log);
+		log('server','pc: ',pc);
 	};
 
 	//建立一個專屬呼叫者的pc
@@ -57,6 +58,7 @@ function answer(data){
 	log('server','收到answer: ', data.desc);
 	var pc = server_pc[data.watcher];
 	pc.setRemoteDescription(new RTCSessionDescription(data.desc)).catch(log);
+	log('server','pc: ',pc);
 }
 
 function leave_watch(data){
