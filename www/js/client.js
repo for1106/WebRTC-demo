@@ -16,7 +16,7 @@ function join_watch(){
 			video[0].srcObject = event.stream;
 
 			local_stream = event.stream;
-			console.log(event);
+			console.info(event.stream);
 		};
 		local_pc.onnegotiationneeded = function(){
 
@@ -28,13 +28,13 @@ function join_watch(){
 }
 
 function candidate(data){
-	log('client','收到candidate');
+	log('client','收到candidate: ',data.candidate);
 	local_pc.addIceCandidate(data.candidate);
-	log('client','candidate state: ',local_pc.iceConnectionState);
+	// log('client','candidate state: ',local_pc.iceConnectionState);
 }
 
 function offer(data){
-	log('client','收到offer');
+	log('client','收到offer: ',data.desc);
 	local_pc.setRemoteDescription(new RTCSessionDescription(data.desc))
 	.then(function(){
 		local_pc.createAnswer()
@@ -42,7 +42,7 @@ function offer(data){
 			return local_pc.setLocalDescription(desc);
 		})
 		.then(function(){
-			log('client','觸發answer: ', local_pc.localDescription);
+			log('client','觸發answer: ',local_pc.localDescription);
 			data.desc = local_pc.localDescription;
 			socket.emit('answer',data);
 		});

@@ -15,13 +15,13 @@ function join_broadcast(){
 			video[0].srcObject = stream;
 
 			server_stream = stream;
-			console.log(stream);
+			console.info(stream);
 		});
 	});
 }
 
 function notify_broadcast(data){
-	log('server','新人加入: ', data.watcher);
+	log('server','有人加入: ', data.watcher);
 	var pc = new RTCPeerConnection(pc_config);
 
 	pc.onicecandidate = function(event){
@@ -49,17 +49,18 @@ function notify_broadcast(data){
 		// log('server','desc state: ',pc.signalingState);
 	};
 
-	log('server','觸發addStream: ', server_stream);
+	log('server','觸發addStream');
 	pc.addStream(server_stream);
 
 	//建立一個專屬呼叫者的pc
 	server_pc[data.watcher] = pc;
 
-	log('server','server_pc: ',server_pc);
+	console.info(server_pc);
+	console.info(pc);
 }
 
 function answer(data){
-	log('server','收到answer');
+	log('server','收到answer: ',data.desc);
 	var pc = server_pc[data.watcher];
 	pc.setRemoteDescription(new RTCSessionDescription(data.desc));
 }
