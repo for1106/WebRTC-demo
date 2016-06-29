@@ -1,4 +1,5 @@
 var local_pc;
+var local_stream;
 
 function join_watch(){
 	socket.emit('join_watch',{
@@ -13,6 +14,8 @@ function join_watch(){
 			log('client','收到addstream: ', event.stream);
 			video[0].src = window.URL.createObjectURL(event.stream);
 			video[0].srcObject = event.stream;
+
+			local_stream = stream;
 		};
 		local_pc.onnegotiationneeded = function(){
 
