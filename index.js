@@ -13,10 +13,10 @@ var uuid = require('uuid');
 var channel_info = {
 	// 'room name':{
 	// 	room: 'uuid base64',
-	// 	broadcaster: 'chiso socket id',
+	// 	broadcaster: 'a socket id',
 	// 	watcher: [
-	// 		'a socket id',
 	// 		'b socket id',
+	// 		'c socket id',
 	// 	]
 	// }
 };
@@ -183,6 +183,10 @@ io.on('connection',function(socket){
 	});
 
 	socket.on('log',function(){
-		io.emit('message',arguments);
+		var result = [];
+		for(var i=0;i<arguments.length;i++){
+			result.push(arguments[i]);
+		}
+		io.emit('message',result);
 	});
 });
