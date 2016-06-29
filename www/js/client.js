@@ -39,10 +39,10 @@ function offer(data){
 	.then(function(){
 		local_pc.createAnswer()
 		.then(function(desc){
-			return local_pc.setLocalDescription(desc);
+			local_pc.setLocalDescription(new RTCSessionDescription(desc));
 		})
 		.then(function(){
-			log('client','觸發answer: ',local_pc.localDescription);
+			log('client','觸發answer: ', local_pc.localDescription);
 			data.desc = local_pc.localDescription;
 			socket.emit('answer',data);
 		});

@@ -37,7 +37,7 @@ function notify_broadcast(data){
 	pc.onnegotiationneeded = function(){
 		pc.createOffer()
 		.then(function(desc){
-			return pc.setLocalDescription(desc);
+			pc.setLocalDescription(new RTCSessionDescription(desc));
 		})
 		.then(function(){
 			log('server','觸發offer: ', pc.localDescription);
