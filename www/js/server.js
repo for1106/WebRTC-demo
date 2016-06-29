@@ -57,7 +57,7 @@ function notify_broadcast(data){
 function answer(data){
 	log('server','收到answer: ', data.desc);
 	var pc = server_pc[data.watcher];
-	pc.setRemoteDescription(new RTCSessionDescription(data.desc)).catch(log);
+	pc.setRemoteDescription(new RTCSessionDescription(data.desc.sdp)).catch(log);
 	log('server','pc: ',pc);
 }
 
