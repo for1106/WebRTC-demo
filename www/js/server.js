@@ -48,7 +48,7 @@ function notify_broadcast(data){
 		});
 	};
 	pc.onsignalingstatechange = function(event){
-		log('server','state: ',pc.signalingState);
+		log('server','desc state: ',pc.signalingState);
 	};
 
 	//建立一個專屬呼叫者的pc
