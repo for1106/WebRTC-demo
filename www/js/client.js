@@ -5,7 +5,7 @@ function join_watch(){
 	socket.emit('join_watch',{
 		channel: channel_input.val()
 	},function(){
-		local_pc = new RTCPeerConnection(null);
+		local_pc = new RTCPeerConnection(pc_config);
 
 		local_pc.onicecandidate = function(event){
 

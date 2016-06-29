@@ -22,7 +22,7 @@ function join_broadcast(){
 
 function notify_broadcast(data){
 	log('server','新人加入: ', data.watcher);
-	var pc = new RTCPeerConnection(null);
+	var pc = new RTCPeerConnection(pc_config);
 
 	pc.onicecandidate = function(event){
 		if(event.candidate){
