@@ -59,7 +59,7 @@ function notify_watch(data){
 }
 
 function answer(data){
-	log('server','收到answer: ',data.desc.sdp);
+	log('server','收到answer:\n',data.desc.sdp);
 	server_pc[data.watcher].setRemoteDescription(data.desc);
 }
 
