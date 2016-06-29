@@ -7,16 +7,14 @@ function start_broadcast(){
 		video: true
 	})
 	.then(function(stream){
-		log_msg('收到stream: ');
-		log_msg(stream);
 		server_stream = stream;
-		// video[0].muted = true;
-		// video[0].srcObject = stream;
-		video[0].src = URL.createObjectURL(stream);
+		video[0].muted = true;
+		video[0].srcObject = stream;
+
+		init_canvas();
 	})
 	.catch(log_msg);
 
-	log_msg('送出start_broadcast');
 	socket.emit('start_broadcast',{
 		channel: channel_input.val()
 	});
@@ -26,8 +24,6 @@ function change_data(data){
 	var pc = new RTCPeerConnection();
 
 	pc.onicecandidate = function(event){
-		log_msg('change_candidate: ');
-		log_msg(event.candidate);
 		if(event.candidate){
 			socket.emit('change_candidate',{
 				socket_id: data.socket_id,
@@ -36,17 +32,13 @@ function change_data(data){
 		}
 	};
 
-	log_msg('addStream: ');
-	log_msg(server_stream)
 	pc.addStream(server_stream);
 
-	log_msg('開啟createOffer');
 	pc.createOffer()
 	.then(function(desc){
 		pc.setLocalDescription(desc);
 	})
 	.then(function(){
-		log_msg('送出offer');
 		socket.emit('offer',{
 			socket_id: data.socket_id,
 			desc: pc.localDescription
@@ -56,11 +48,8 @@ function change_data(data){
 
 	//建立一個專屬呼叫者的pc
 	server_pc[data.socket_id] = pc;
-	log_msg(server_pc);
 }
 
 function response_answer(data){
-	log_msg('觸發response_answer: ');
-	log_msg(data);
 	server_pc[data.socket_id].setRemoteDescription(data.desc);
 }
