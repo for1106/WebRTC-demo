@@ -16,16 +16,15 @@
 			<div class="form-group">
 				<label class="control-label">Channel</label>
 				<div class="input-group">
-					<input type="text" class="form-control" id="channel_input">
+					<input type="text" class="form-control" id="input_channel">
 					<span class="input-group-btn">
-						<button class="btn btn-primary" id="broadcast_button">Broadcast</button>
-						<button class="btn btn-primary" id="watch_button">Watch</button>
-						<button class="btn btn-danger" id="list_button">List</button>
+						<button class="btn btn-primary" id="button_broadcast">Broadcast</button>
+						<button class="btn btn-primary" id="button_watch">Watch</button>
+						<button class="btn btn-danger" id="button_list">List</button>
 					</span>
 				</div>
 			</div>
-
-			<video></video>
+			<video autoplay></video>
 		</div>
 	</div>
 </div>
@@ -61,20 +60,20 @@
 
 <script>
 	var pc_config = { 'iceServers': [{ 'url': 'stun:stun.l.google.com:19302' }] };
+
 	var video = $('video')[0],
-		channel_input = $('#channel_input'),
-		broadcast_button = $('#broadcast_button'),
-		watch_button = $('#watch_button'),
-		list_button = $('#list_button'),
+		channel = $('#input_channel'),
+		button_broadcast = $('#button_broadcast'),
+		button_watch = $('#button_watch'),
+		button_list = $('#button_list'),
 		dialog = $('#dialog');
 
-	broadcast_button.on('click', join_broadcast);
-	watch_button.on('click', join_watch);
-	list_button.on('click', list_call);
+	button_broadcast.on('click', broadcast);
+	button_watch.on('click', watch);
+	button_list.on('click', list);
 
 	var socket = io();
 	socket.on('message',message);
-	socket.on('list',list_back);
 
 	socket.on('notify_broadcast',notify_broadcast);
 	socket.on('notify_watch',notify_watch);
@@ -83,35 +82,32 @@
 	socket.on('offer',offer);
 	socket.on('answer',answer);
 
-	function list_call(){
+	function list(){
 		socket.emit('list',{
-			channel: channel_input.val()
-		});
-	}
+			channel: channel.val()
+		},function(data){
+			dialog_show(data.label,data.list);
 
-	function list_back(data){
-		dialog_show(data.label,data.list);
-
-		dialog.find('.modal-body p').on('click',function(){
-			if(data.flag){
-				channel_input.val($(this).text());
-			}
-			dialog.modal('hide');
+			dialog.find('.modal-body p').on('click',function(){
+				if(data.flag){
+					channel.val($(this).text());
+				}
+				dialog.modal('hide');
+			});
 		});
 	}
 
 	function log(){
-		var result = ['log'];
-		for(var i=0;i<arguments.length;i++){
-			result.push(arguments[i]);
-		}
-		socket.emit.apply(socket,result);
+		var args = Array.prototype.slice.call(arguments);
+		socket.emit('log',args);
 	}
 
 	function message(data){
-		if(data.type && data.type == 'alert'){
+		if(data.msg){
 			dialog_show('警示',data.msg);
 		}else{
+			var now = (window.performance.now() / 1000).toFixed(3);
+			data.unshift(now);
 			console.log.apply(console,data);
 		}
 	}
