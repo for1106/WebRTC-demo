@@ -80,7 +80,7 @@ function answer(data){
 }
 
 function candidate_client(data){
-	log('server','收到','candidate: ',data.candidate.candidate);
+	// log('server','收到','candidate: ',data.candidate.candidate);
 	server_pc[data.watcher].addIceCandidate(data.candidate)
 	.catch(log);
 }

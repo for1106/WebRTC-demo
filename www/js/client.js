@@ -51,7 +51,7 @@ function offer(data){
 }
 
 function candidate_server(data){
-	log('client','收到','candidate: ',data.candidate.candidate);
+	// log('client','收到','candidate: ',data.candidate.candidate);
 	local_pc.addIceCandidate(data.candidate)
 	.catch(log);
 }
