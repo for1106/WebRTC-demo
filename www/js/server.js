@@ -7,7 +7,7 @@ function broadcast(){
 	},function(){
 		navigator.mediaDevices
 		.getUserMedia({
-			audio: false,
+			audio: true,
 			video: true
 		})
 		.then(function(stream){
