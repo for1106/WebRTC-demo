@@ -25,6 +25,7 @@ function notify_broadcast(data){
 	var pc = new RTCPeerConnection(pc_config);
 
 	pc.onicecandidate = function(event){
+		console.log(event);
 		if(event.candidate){
 			// log('server','觸發','candidate: ', event.candidate.candidate);
 			socket.emit('candidate_server',{
@@ -32,7 +33,6 @@ function notify_broadcast(data){
 				candidate: event.candidate
 			});
 		}else{
-			console.log(event);
 			// log('server','結束','candidate');
 		}
 	};
