@@ -32,6 +32,7 @@ function notify_broadcast(data){
 				candidate: event.candidate
 			});
 		}else{
+			console.log(event);
 			// log('server','結束','candidate');
 		}
 	};
