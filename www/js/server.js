@@ -7,11 +7,11 @@ function broadcast(){
 	},function(){
 		navigator.mediaDevices
 		.getUserMedia({
-			audio: false,
+			audio: true,
 			video: true
 		})
 		.then(function(stream){
-			video.muted = true;
+			// video.muted = true;
 			video.src = window.URL.createObjectURL(stream);
 			video.srcObject = stream;
 			server_stream = stream;
@@ -25,7 +25,6 @@ function notify_broadcast(data){
 	var pc = new RTCPeerConnection(pc_config);
 
 	pc.onicecandidate = function(event){
-		console.log(event);
 		if(event.candidate){
 			// log('server','觸發','candidate: ', event.candidate.candidate);
 			socket.emit('candidate_server',{
@@ -51,7 +50,7 @@ function notify_broadcast(data){
 
 	log('server','觸發','offer');
 	pc.createOffer({
-		offerToReceiveAudio: 0,
+		offerToReceiveAudio: 1,
 		offerToReceiveVideo: 1
 	})
 	.then(function(desc){
